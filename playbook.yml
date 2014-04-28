@@ -1,0 +1,18 @@
+---
+- hosts: all
+  remote_user: root
+  vars:
+    twilio:
+      account_sid: 0123456789abcdef
+      auth_token: 0123456789abcdef
+      caller_id: 555-555-5555
+
+  tasks:
+  - name: install .twiliorc
+    template: src=twiliorc dest=/home/.twiliorc owner=root group=root mode=0660
+
+  - name: install twilio scripts from monit
+    copy: src=twilio-sms.sh dest="/usr/local/bin/{{ item | basename }}" owner=root group=root mode=0755
+    with_items:
+      - monit2twilio.sh
+      - twilio-sms.sh
